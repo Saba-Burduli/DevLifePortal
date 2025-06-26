@@ -3,8 +3,10 @@ using Api.Middleware;
 using Serilog;
 using Application;
 using Application.CodeRoast.CodeRoastHandler;
+using Domain.Repository.BugChaseRepositories;
 using Domain.Repository.CodeRoastRepositories;
 using Infrastructure;
+using Infrastructure.BugChaseDbContext;
 using Infrastructure.Persistence.Configuration.CodeRoastConfiguration;
 using Infrastructure.Persistence.Repositories.CodeRoastRepositories;
 
@@ -34,6 +36,16 @@ if (app.Environment.IsDevelopment())
  builder.Services.AddScoped<ICodeRoastRepository, CodeRoastRepository>();
  builder.Services.AddHttpClient();
  builder.Services.AddMediatR(typeof(CodeRoastHandler));
+
+ builder.Services.AddDbContext<BugChaseDbContext>(opt =>
+ opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+ builder.Services.AddScoped<IBugChaseRepository, BugchaseRe >();
+ builder.Services.AddSignalR();
+ builder.Services.AddMediatR(typeof(UpdateScoreHandler));
+
+ app.MapHub<BugChaseHub>("/bugchase-hub");
+ app.MapBugChaseEndpoints();
+
 
 
 app.UseSerilogRequestLogging();
