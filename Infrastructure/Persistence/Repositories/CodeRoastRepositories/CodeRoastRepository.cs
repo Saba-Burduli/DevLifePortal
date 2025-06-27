@@ -13,16 +13,18 @@ namespace Infrastructure.Persistence.Repositories.CodeRoastRepositories;
 
 public class CodeRoastRepository : ICodeRoastRepository
 {
-  private readonly HttpClient _httpClient;
+    private readonly HttpClient _httpClient;
     private readonly OpenAiSettings _settings;
     private readonly IMongoCollection<RoastLog> _cache;
+    private readonly IHubContext<CodeRoastHub> _hub;
 
-    public CodeRoastRepository(HttpClient httpClient, IOptions<OpenAiSettings> settings, IMongoClient mongoClient)
+    public CodeRoastRepository(HttpClient httpClient, IOptions<OpenAiSettings> settings, IMongoClient mongoClient, IHubContext<CodeRoastHub> hub)
     {
         _httpClient = httpClient;
         _settings = settings.Value;
         var db = mongoClient.GetDatabase("CodeRoastDb");
         _cache = db.GetCollection<RoastLog>("RoastCache");
+        _hub = hub;
     }
 
     public async Task<CodeRoastResponse> RoastCodeAsync(CodeRoastRequest request)
@@ -30,6 +32,7 @@ public class CodeRoastRepository : ICodeRoastRepository
         var cached = await _cache.Find(x => x.CodeSnippet == request.CodeSnippet).FirstOrDefaultAsync();
         if (cached != null)
         {
+            await _hub.Clients.All.SendAsync("ReceiveRoast", cached.RoastMessage);
             return new CodeRoastResponse(cached.Verdict, cached.RoastMessage);
         }
 
@@ -66,6 +69,7 @@ public class CodeRoastRepository : ICodeRoastRepository
             CreatedAt = DateTime.UtcNow
         });
 
+        await _hub.Clients.All.SendAsync("ReceiveRoast", result.RoastMessage);
         return result;
     }
 }

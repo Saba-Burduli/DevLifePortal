@@ -8,7 +8,6 @@ public class CodeRoastDbContext : DbContext
     public DbSet<RoastLog> RoastLogs => Set<RoastLog>();
 }
 
-//RoastLog
 public class RoastLog
 {
     public int Id { get; set; }
