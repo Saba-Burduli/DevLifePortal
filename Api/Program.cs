@@ -1,6 +1,7 @@
 using System.Net.Http.Headers;
 using Api.EndpointDefinitions.BugChaseEndpointDefinitions;
 using Api.EndpointDefinitions.DevDatingEndpointDefinition;
+using Api.EndpointDefinitions.EscapeMeetingEndPointDefinitions;
 using Api.EndpointDefinitions.GitHubPersonalityEndpointDefinition;
 using Api.EndpointDefinitions.ShowCodeEndpointDefinitions;
 using Api.Extensions;
@@ -12,11 +13,13 @@ using Application.BugChase.BugChaseCommands;
 using Application.CodeRoast.CodeRoastHandler;
 using Application.CodeRoast.RoastCodeCommand;
 using Application.DevDating.CreateProfileCommands;
+using Application.EscapeMeeting.GenerateExcuseQueries;
 using Application.GitHubPersonality.AnalyzeGitHubRepoCommands;
 using Application.ShowCode.AnalyzeRepoQueries;
 using Domain.Repository.BugChaseRepositories;
 using Domain.Repository.CodeRoastRepositories;
 using Domain.Repository.DevDatingRepositories;
+using Domain.Repository.EscapeMeetingRepositories;
 using Domain.Repository.GitHubPersonalityRepositories;
 using Domain.Repository.ShowCodeRepositories;
 using Infrastructure;
@@ -27,9 +30,11 @@ using Infrastructure.GitHubPersonalityRepository;
 using Infrastructure.Persistence.Configuration.CodeRoastConfiguration;
 using Infrastructure.Persistence.Repositories.BugChaseRepositories;
 using Infrastructure.Persistence.Repositories.CodeRoastRepositories;
+using Infrastructure.Persistence.Repositories.EscapeMeetingRepositories;
 using Infrastructure.Persistence.Repositories.ShowCodeRepositories;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -86,6 +91,13 @@ if (app.Environment.IsDevelopment())
  builder.Services.AddHttpClient();
  builder.Services.AddMediatR(typeof(CreateProfileHandler));
  app.MapDevDatingEndpoints();
+
+//Escape Meeting Project :
+ builder.Services.AddSingleton<IConnectionMultiplexer>(sp => ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis")));
+ builder.Services.AddScoped<IEscapeMeetingRepository, EscapeMeetingRepository>();
+ builder.Services.AddMediatR(typeof(GenerateExcuseHandler));
+ app.MapEscapeMeetingEndpoints();
+
 
 
 app.UseSerilogRequestLogging();
