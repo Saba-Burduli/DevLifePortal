@@ -3,9 +3,9 @@ using MediatR;
 
 namespace Application.BugChase.BugChaseCommands;
 
-public record UpdateScoreCommand(string Username, int Score) : IRequest;
+public record UpdateScoreCommand(string Username, int Score) : IRequest<Unit>;
 
-public class UpdateScoreHandler : IRequestHandler<UpdateScoreCommand>
+public class UpdateScoreHandler : IRequestHandler<UpdateScoreCommand , Unit>
 {
     private readonly IBugChaseRepository _service;
     public UpdateScoreHandler(IBugChaseRepository service) => _service = service;
