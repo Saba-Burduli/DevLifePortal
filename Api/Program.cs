@@ -1,8 +1,8 @@
 using System.Net.Http.Headers;
 using Api.EndpointDefinitions.BugChaseEndpointDefinitions;
+using Api.EndpointDefinitions.CodeRoastEndpointDefinitions;
 using Api.EndpointDefinitions.DevDatingEndpointDefinition;
 using Api.EndpointDefinitions.EscapeMeetingEndPointDefinitions;
-using Api.EndpointDefinitions.GitHubPersonalityEndpointDefinition;
 using Api.EndpointDefinitions.ShowCodeEndpointDefinitions;
 using Api.Extensions;
 using Api.Hubs.BugChaseHub;
@@ -14,19 +14,16 @@ using Application.CodeRoast.CodeRoastHandler;
 using Application.CodeRoast.RoastCodeCommand;
 using Application.DevDating.CreateProfileCommands;
 using Application.EscapeMeeting.GenerateExcuseQueries;
-using Application.GitHubPersonality.AnalyzeGitHubRepoCommands;
 using Application.ShowCode.AnalyzeRepoQueries;
 using Domain.Repository.BugChaseRepositories;
 using Domain.Repository.CodeRoastRepositories;
 using Domain.Repository.DevDatingRepositories;
 using Domain.Repository.EscapeMeetingRepositories;
-using Domain.Repository.GitHubPersonalityRepositories;
 using Domain.Repository.ShowCodeRepositories;
 using Infrastructure;
 using Infrastructure.BugChaseDbContext;
 using Infrastructure.DevDatingDbContext;
 using Infrastructure.DevDatingRepository;
-using Infrastructure.GitHubPersonalityRepository;
 using Infrastructure.Persistence.Configuration.CodeRoastConfiguration;
 using Infrastructure.Persistence.Repositories.BugChaseRepositories;
 using Infrastructure.Persistence.Repositories.CodeRoastRepositories;
@@ -37,7 +34,7 @@ using MongoDB.Driver;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddHttpClient();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -65,6 +62,7 @@ if (app.Environment.IsDevelopment())
  builder.Services.AddSignalR();
  builder.Services.AddSingleton<IMongoClient>(_ => new MongoClient(builder.Configuration.GetConnectionString("MongoDb")));
  builder.Services.AddMediatR(typeof(RoastCodeHandler));
+ app.MapCodeRoastEndpoints();
 
 // Bug Chase Game Project :
  builder.Services.AddDbContext<BugChaseDbContext>(opt =>
@@ -72,7 +70,6 @@ if (app.Environment.IsDevelopment())
  builder.Services.AddScoped<IBugChaseRepository, BugChaseRepository >();
  builder.Services.AddSignalR();
  builder.Services.AddMediatR(typeof(UpdateScoreHandler));
-
  app.MapHub<BugChaseHub>("/bugchase-hub");
  app.MapBugChaseEndpoints();
 
