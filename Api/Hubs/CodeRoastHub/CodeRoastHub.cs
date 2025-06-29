@@ -1,47 +1,22 @@
-using Application.CodeRoast.RoastCodeCommand;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
+﻿using Api.Extensions;
 using Microsoft.AspNetCore.SignalR;
 
-namespace Api.Hubs.CodeRoastHub;
+namespace Domain.Hubs.CodeRoastHub;
 
-public class CodeRoastHub : Hub
-{   
-    public static class CodeRoastEndPointDefinition
+public class CodeRoastHub : Hub { }
+
+// CodeRoast/CodeRoastExceptionFilter.cs
+public class CodeRoastExceptionFilter : IEndpointFilter
+{
+    public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {
-        public static void MapCodeRoastEndpoints(/*this*/ IEndpointRouteBuilder app)
+        try
         {
-            app.MapPost("/api/roast", async (
-                    [FromBody] RoastCodeHandler command,
-                    ISender sender) =>
-                {
-                    var response = await sender.Send(command);
-                    return Results.Ok(response);
-                })
-                .AddEndpointFilter<CodeRoastExceptionFilter>()
-                .WithName("RoastCode");
-
-            app.MapHub<CodeRoastHub>("/ws/coderoast");
+            return await next(context);
+        }
+        catch (CodeRoastException ex)
+        {
+            return Results.Problem(title: "Code Roast Error", detail: ex.Message);
         }
     }
 }
-
-// CodeRoastEndPointDefinition.cs
-
-/*public static class CodeRoastEndPointDefinition
-{
-    public static void MapCodeRoastEndpoints(this IEndpointRouteBuilder app)
-    {
-        app.MapPost("/api/roast", async (
-                [FromBody] RoastCodeHandler command,
-                ISender sender) =>
-            {
-                var response = await sender.Send(command);
-                return Results.Ok(response);
-            })
-            .AddEndpointFilter<CodeRoastExceptionFilter>()
-            .WithName("RoastCode");
-
-        app.MapHub<CodeRoastHub>("/ws/coderoast");
-    }
-}*/
