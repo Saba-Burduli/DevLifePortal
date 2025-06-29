@@ -1,4 +1,5 @@
 ﻿using Application.CodeRoast.RoastCodeCommand;
+using Domain.Hubs.CodeRoastHub;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,7 +10,7 @@ public static class CodeRoastEndPoint
     public static void MapCodeRoastEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapPost("/api/roast", async (
-                [FromBody] CodeRoastCommand command,
+                [FromBody] RoastCodeHandler command,
                 ISender sender) =>
             {
                 var response = await sender.Send(command);
@@ -17,5 +18,7 @@ public static class CodeRoastEndPoint
             })
             .AddEndpointFilter<CodeRoastExceptionFilter>()
             .WithName("RoastCode");
+
+        app.MapHub<CodeRoastHub>("/ws/coderoast");
     }
 }
