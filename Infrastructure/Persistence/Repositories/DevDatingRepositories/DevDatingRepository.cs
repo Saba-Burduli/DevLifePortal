@@ -1,3 +1,4 @@
+using DnsClient.Internal;
 using Domain.Entities.DevDatingEntities;
 using Domain.Repository.DevDatingRepositories;
 using MongoDB.Driver;
@@ -9,7 +10,6 @@ public class DevDatingRepository : IDevDatingRepository
     private readonly IMongoCollection<DevProfile> _profiles;
     private readonly IMongoCollection<DevMatch> _matches;
     private readonly HttpClient _httpClient;
-
     public DevDatingRepository(IMongoClient mongoClient, IHttpClientFactory httpClientFactory)
     {
         var database = mongoClient.GetDatabase("DevLifePortal");
