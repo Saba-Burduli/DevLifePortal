@@ -127,5 +127,5 @@ Response:
 
 ---
 
-## 🙌 Credits
-Built with ❤️ for DevLife Portal – Developer Life Simulator. Enjoy the roast and embrace the pain 🔥.
+##  Credits
+Built with ❤️ for DevLife Portal – Developer Life Simulator. Enjoy the roast and embrace the pain .
