@@ -22,3 +22,5 @@ public static class DevDatingEndpointDefinition
             => Results.Ok(await sender.Send(command)));
     }
 }
+
+
