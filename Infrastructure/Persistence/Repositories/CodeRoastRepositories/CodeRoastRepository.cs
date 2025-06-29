@@ -6,8 +6,10 @@ using Domain.Exceptions.CodeRoastExceptions;
 using Domain.Repository.CodeRoastRepositories;
 using Infrastructure.CodeRoastDbContext;
 using Infrastructure.Persistence.Configuration.CodeRoastConfiguration;
+using Microsoft.AspNet.SignalR;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+
 
 namespace Infrastructure.Persistence.Repositories.CodeRoastRepositories;
 
@@ -18,7 +20,7 @@ public class CodeRoastRepository : ICodeRoastRepository
     private readonly IMongoCollection<RoastLog> _cache;
     private readonly IHubContext<CodeRoastHub> _hub;
 
-    public CodeRoastRepository(HttpClient httpClient, IOptions<OpenAiSettings> settings, IMongoClient mongoClient, IHubContext<CodeRoastHub> hub)
+    public CodeRoastRepository(HttpClient httpClient, IOptions<OpenAiSettings> settings, IMongoClient mongoClient, IhubCo<CodeRoastHub> hub)
     {
         _httpClient = httpClient;
         _settings = settings.Value;
