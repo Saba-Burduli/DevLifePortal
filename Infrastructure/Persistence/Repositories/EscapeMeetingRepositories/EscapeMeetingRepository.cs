@@ -9,7 +9,7 @@ namespace Infrastructure.Persistence.Repositories.EscapeMeetingRepositories;
 
 public class EscapeMeetingRepository  : IEscapeMeetingRepository
 {
-    private readonly IDatabase _redis;
+    private readonly StackExchange.Redis.IDatabase _redis;
     private readonly string _favoritesKey = "escape:favorites";
     public EscapeMeetingRepository(IConnectionMultiplexer redis)
     {
