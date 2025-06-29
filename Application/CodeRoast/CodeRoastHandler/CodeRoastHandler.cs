@@ -12,6 +12,7 @@ public class CodeRoastHandler : IRequestHandler<CodeRoastCommand, CodeRoastRespo
 
     public async Task<CodeRoastResponse> Handle(CodeRoastCommand request, CancellationToken cancellationToken)
     {
-        return await _roastRepository.RoastCodeAsync(new CodeRoastCommand(request.CodeSnippet));
+        var domainRequest = new CodeRoastRequest(request.CodeSnippet); 
+        return await _roastRepository.RoastCodeAsync(domainRequest);
     }
 }
