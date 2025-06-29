@@ -10,17 +10,16 @@ using Microsoft.AspNet.SignalR;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-
 namespace Infrastructure.Persistence.Repositories.CodeRoastRepositories;
 
-public class CodeRoastRepository : ICodeRoastRepository
+     public class CodeRoastRepository : ICodeRoastRepository
 {
     private readonly HttpClient _httpClient;
     private readonly OpenAiSettings _settings;
     private readonly IMongoCollection<RoastLog> _cache;
-    private readonly IHubContext<CodeRoastHub> _hub;
+    private readonly IHubContext _hub; //change from private readonly IHubContext<CodeRoastHub> _hub; to there  
 
-    public CodeRoastRepository(HttpClient httpClient, IOptions<OpenAiSettings> settings, IMongoClient mongoClient, IhubCo<CodeRoastHub> hub)
+    public CodeRoastRepository(HttpClient httpClient, IOptions<OpenAiSettings> settings, IMongoClient mongoClient, IHubContext hub)
     {
         _httpClient = httpClient;
         _settings = settings.Value;
@@ -41,7 +40,8 @@ public class CodeRoastRepository : ICodeRoastRepository
         var content = new
         {
             model = "gpt-4",
-            messages = new[] {
+            messages = new[]
+            {
                 new { role = "system", content = "You are a sarcastic senior developer who gives feedback in a roasting manner." },
                 new { role = "user", content = $"Roast this code:\n{request.CodeSnippet}" }
             }
@@ -61,7 +61,7 @@ public class CodeRoastRepository : ICodeRoastRepository
         var json = await JsonDocument.ParseAsync(responseStream);
         var roast = json.RootElement.GetProperty("choices")[0].GetProperty("message").GetProperty("content").GetString();
 
-        var result = new CodeRoastResponse("🔥 Brutal honesty incoming", roast ?? "No roast available");
+        var result = new CodeRoastResponse("Brutal honesty incoming", roast ?? "No roast available");
 
         await _cache.InsertOneAsync(new RoastLog
         {
