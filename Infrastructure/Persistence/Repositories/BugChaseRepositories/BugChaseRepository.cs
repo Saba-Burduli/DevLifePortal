@@ -6,26 +6,30 @@ namespace Infrastructure.Persistence.Repositories.BugChaseRepositories;
 
 public class BugChaseRepository : IBugChaseRepository
 {
-    private readonly BugChaseDbContext.BugChaseDbContext _context; //i have to change this
-    
+    private readonly BugChaseDbContext.BugChaseDbContext _context;
+
     public BugChaseRepository(BugChaseDbContext.BugChaseDbContext context) => _context = context;
 
     public async Task UpdateScoreAsync(string username, int score)
     {
-        return await _context.Players
-            .OrderByDescending(p => p.Score)
-            .Take(10)
-            .Select(p => new LeaderboardEntry { UserName = p.Username, Score = p.Score })
-            .ToListAsync();    }
+        var player = await _context.Players.FirstOrDefaultAsync(p => p.Username == username);
+        if (player == null) return;
+        player.Score = Math.Max(player.Score, score);
+        await _context.SaveChangesAsync();
+    }
 
     public async Task<List<LeaderboardEntry>> GetTopScoresAsync()
     {
-        throw new NotImplementedException();
+        return await _context.Players
+            .OrderByDescending(p => p.Score)
+            .Take(10)
+            .Select(p => new LeaderboardEntry { Username = p.Username, Score = p.Score })
+            .ToListAsync();
     }
 
     public async Task UnlockAchievementAsync(string username, string achievement)
     {
-        var player = await _context.Players.FirstOrDefaultAsync(p => p.User == username);
+        var player = await _context.Players.FirstOrDefaultAsync(p => p.Username == username);
         if (player == null) return;
         if (!player.Achievements.Contains(achievement))
         {
@@ -42,4 +46,3 @@ public class BugChaseRepository : IBugChaseRepository
         await _context.SaveChangesAsync();
     }
 }
-
