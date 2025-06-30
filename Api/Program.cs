@@ -1,4 +1,5 @@
 using System.Net.Http.Headers;
+using Api.EndpointDefinitions.AuthEndpointDefinition;
 using Api.EndpointDefinitions.BugChaseEndpointDefinitions;
 using Api.EndpointDefinitions.CodeRoastEndpointDefinitions;
 using Api.EndpointDefinitions.DevDatingEndpointDefinition;
@@ -9,6 +10,7 @@ using Api.Hubs.BugChaseHub;
 using Api.Middleware;
 using Serilog;
 using Application;
+using Application.Abstractions.UserRepository;
 using Application.BugChase.BugChaseCommands;
 using Application.CodeRoast.CodeRoastHandler;
 using Application.CodeRoast.RoastCodeCommand;
@@ -20,6 +22,7 @@ using Domain.Repository.CodeRoastRepositories;
 using Domain.Repository.DevDatingRepositories;
 using Domain.Repository.EscapeMeetingRepositories;
 using Domain.Repository.ShowCodeRepositories;
+using Domain.Repository.UserRepositories;
 using Infrastructure;
 using Infrastructure.BugChaseDbContext;
 using Infrastructure.DevDatingDbContext;
@@ -97,6 +100,21 @@ builder.Services.AddScoped<IEscapeMeetingRepository, EscapeMeetingRepository>();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<GenerateExcuseHandler>());
 app.MapEscapeMeetingEndpoints();
 
+
+//For Authorization System :
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(1);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddSingleton<IUserRepository, InMemoryUserRepository>();
+app.MapAuthEndpoints();
+
+app.UseSession();
 
 app.UseSerilogRequestLogging();
 
