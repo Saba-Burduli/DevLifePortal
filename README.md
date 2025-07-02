@@ -4,6 +4,7 @@ The **Code Roast** mini-project is part of the DevLife Portal. It's a humorous A
 
 ---
 
+
 ## 🧱 Architecture Overview
 This project follows **Clean Architecture** and is structured as a **modular monolith** with four layers:
 
