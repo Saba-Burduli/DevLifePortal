@@ -1,6 +1,7 @@
 
 
 
+
 # 📄 Code Roast Project – DevLife Portal
 
 The **Code Roast** mini-project is part of the DevLife Portal. It's a humorous AI-powered tool where developers submit code snippets and get brutally honest feedback from a sarcastic AI mentor. Ideal for fun, motivation, and creative development learning.
