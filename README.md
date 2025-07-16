@@ -1,5 +1,5 @@
 
-## 🧱 Architecture Overview
+## Architecture Overview
 This project follows **Clean Architecture** and is structured as a **modular monolith** with four layers:
 
 - **API Layer**: Endpoint routing, SignalR Hubs, Filters
@@ -9,16 +9,16 @@ This project follows **Clean Architecture** and is structured as a **modular mon
 
 ---
 
-## 🚀 Features
+##  Features
 
-- 🔥 **AI Integration**: Roasts code snippets using OpenAI's GPT-4
-- 🧠 **Caching**: Uses MongoDB to avoid repeated API calls for same code
-- 📡 **SignalR**: Sends live roast messages to connected WebSocket clients
-- 🧼 **Clean Layering**: Fully decoupled and extensible architecture
+- **AI Integration**: Roasts code snippets using OpenAI's GPT-4
+-  **Caching**: Uses MongoDB to avoid repeated API calls for same code
+-  **SignalR**: Sends live roast messages to connected WebSocket clients
+-  **Clean Layering**: Fully decoupled and extensible architecture
 
 ---
 
-## ⚙️ Tech Stack
+##  Tech Stack
 
 | Component       | Technology              |
 |----------------|--------------------------|
@@ -33,7 +33,7 @@ This project follows **Clean Architecture** and is structured as a **modular mon
 ---
 
 
-## 📂 Project Structure
+## Project Structure
 
 ```bash
 DevLife.Api
@@ -71,7 +71,7 @@ DevLife.Infrastructure
 
 ```js
 connection.on("ReceiveRoast", (message) => {
-    console.log("🔥 Roast Received:", message);
+    console.log(" Roast Received:", message);
 });
 ```
 
@@ -79,7 +79,7 @@ Endpoint: `/ws/coderoast`
 
 ---
 
-## 🧪 Example Request
+##  Example Request
 ```http
 POST /api/roast
 Content-Type: application/json
@@ -99,7 +99,7 @@ Response:
 
 ---
 
-## 🛠 Configuration
+##  Configuration
 **appsettings.json**:
 ```json
 {
@@ -115,13 +115,13 @@ Response:
 
 ---
 
-## 🧠 Future Enhancements
+##  Future Enhancements
 - Roast Levels (nice, sarcastic, aggressive)
 - Roast history view
 - User profile tracking
-- Multiplayer roast battles 💥
+- Multiplayer roast battles 
 
 ---
 
 ##  Credits
-Built with ❤️ for DevLife Portal – Developer Life Simulator. Enjoy the roast and embrace the pain .
+Built with  for DevLife Portal – Developer Life Simulator. Enjoy the roast and embrace the pain .
